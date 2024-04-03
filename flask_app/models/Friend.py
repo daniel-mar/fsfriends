@@ -11,21 +11,29 @@ class Friend:
         self.first_name = data['first_name']
         self.last_name = data['last_name']
         self.occupation = data['occupation']
-        self.created_at = data['created_at']
+        self.age = data['age']
         self.updated_at = data['updated_at']
+        self.created_at = data['created_at']
 
     @classmethod
     def save(cls, data):
-        query = "INSERT INTO users (first_name, last_name, occupation, age, updated_at, created_at) VALUES(%(first_name)s, %(last_name)s, %(occupation)s, %(created_at)s, %(updated_at)s, NOW(), NOW() )"
-        return connectToMySQL('friend_schema').query_db(query, data)
+        query = "INSERT INTO friends (first_name, last_name, occupation, age, updated_at, created_at) VALUES(%(first_name)s, %(last_name)s, %(occupation)s, %(age)s, NOW(), NOW() )"
+
+        return connectToMySQL('friend_shema').query_db(query, data)
 
     @classmethod
     def get_all(cls):
         query = "SELECT * FROM friends;"
         # config file connection
-        results = connectToMySQL('friend_schema').query_db(query)
+        results = connectToMySQL('friend_shema').query_db(query)
         users = []
         # Row = User
         for row in results:
             users.append(cls(row))
         return users
+    
+    @classmethod
+    def get_one_friend(cls, data):
+        query = "SELECT * FROM friends WHERE id = %(friend_id)s;"
+        results = connectToMySQL('friend_shema').query_db(query, data)
+        return cls(results[0])
